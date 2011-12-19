@@ -7,18 +7,18 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 #
-# - Find GLCP library 
+# - Find OGLP library 
 # Once done this will define
 #
-#   GLCP_FOUND		- system has GLCP
-#   GLCP_INCLUDE_DIR	- the GLCP include directory
-#   GLCP_LIBRARY	- link these to use GLCP
+#   OGLP_FOUND		- system has OGLP
+#   OGLP_INCLUDE_DIR	- the OGLP include directory
+#   OGLP_LIBRARY	- link these to use OGLP
 # 
 
-find_path (GLCP_INCLUDE_DIR glcp.h)
-find_library (GLCP_LIBRARY NAMES glcp)
-if (GLCP_LIBRARY)
-  set (GLCP_FOUND TRUE)
-else (GLCP_LIBRARY)
-  set (GLCP_FOUND FALSE)
-endif (GLCP_LIBRARY)
+find_path (OGLP_INCLUDE_DIR oglp.h)
+find_library (OGLP_LIBRARY NAMES oglp)
+if (OGLP_LIBRARY)
+  set (OGLP_FOUND TRUE)
+else (OGLP_LIBRARY)
+  set (OGLP_FOUND FALSE)
+endif (OGLP_LIBRARY)

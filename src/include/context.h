@@ -19,7 +19,7 @@
 
 #include "common.h"
 #include "memory.h"
-#include <glcp/glcp.h>
+#include <oglp/oglp.h>
 
 namespace cl {
 

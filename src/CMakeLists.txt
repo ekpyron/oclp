@@ -9,12 +9,12 @@
 #
 file (GLOB CLP_SOURCES *.cpp)
 find_package (OpenCL REQUIRED)
-find_package (GLCP REQUIRED)
-include_directories (include ${OPENCL_INCLUDE_DIR} ${GLCP_INCLUDE_DIR})
+find_package (OGLP REQUIRED)
+include_directories (include ${OPENCL_INCLUDE_DIR} ${OGLP_INCLUDE_DIR})
 
 add_library (clp STATIC ${CLP_SOURCES})
 
-target_link_libraries (clp ${OPENCL_LIBRARY} ${GLCP_LIBRARY})
+target_link_libraries (clp ${OPENCL_LIBRARY} ${OGLP_LIBRARY})
 
 set_property (TARGET clp PROPERTY
   COMPILE_FLAGS -std=c++0x)

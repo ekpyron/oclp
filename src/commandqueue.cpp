@@ -135,4 +135,25 @@ void CommandQueue::EnqueueReleaseGLObjects (std::vector<Memory> objects,
 											"an OpenCL command queue.", err);
 }
 
+void CommandQueue::EnqueueCopyBufferToImage (const Memory &src,
+																						 const Memory &dst,
+																						 size_t src_offset,
+																						 const size_t *dst_origin,
+																						 const size_t *region,
+																						 cl_uint num_events_in_wait_list,
+																						 const cl_event *event_wait_list,
+																						 cl_event *event)
+{
+	cl_int err;
+
+	err = clEnqueueCopyBufferToImage (queue, src.get (), dst.get (),
+																		src_offset, dst_origin, region,
+																		num_events_in_wait_list, event_wait_list,
+																		event);
+
+	if (err != CL_SUCCESS)
+		 throw Exception ("Cannot enqueue a copy operation from a bufer to"
+											" an image.", err);
+}
+
 } /* namespace cl */

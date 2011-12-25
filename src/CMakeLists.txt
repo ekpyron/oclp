@@ -10,7 +10,9 @@
 file (GLOB CLP_SOURCES *.cpp)
 find_package (OpenCL REQUIRED)
 find_package (OGLP REQUIRED)
-include_directories (include ${OPENCL_INCLUDE_DIR} ${OGLP_INCLUDE_DIR})
+find_package (GLM REQUIRED)
+include_directories (include ${OPENCL_INCLUDE_DIR} ${OGLP_INCLUDE_DIR}
+		     ${GLM_INCLUDE_DIR})
 
 add_library (clp STATIC ${CLP_SOURCES})
 

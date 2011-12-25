@@ -19,6 +19,7 @@
 
 #include "common.h"
 #include "memory.h"
+#include <glm/glm.hpp>
 
 namespace cl {
 
@@ -48,6 +49,14 @@ public:
 																 cl_uint num_events_in_wait_list,
 																 const cl_event *event_wait_list,
 																 cl_event *event);
+	 void EnqueueCopyBufferToImage (const Memory &src,
+																	const Memory &dst,
+																	size_t src_offset,
+																	const size_t *dst_origin,
+																	const size_t *region,
+																	cl_uint num_events_in_wait_list,
+																	const cl_event *event_wait_list,
+																	cl_event *event);
 private:
 	 CommandQueue (cl_command_queue q);
 	 friend class Context;

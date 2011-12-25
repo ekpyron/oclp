@@ -149,7 +149,7 @@ Memory Context::CreateFromGLTexture2D (cl_mem_flags flags,
 	mem = clCreateFromGLTexture2D (context, flags, textarget, miplevel,
 																 texture.get (), &err);
 	if (err != CL_SUCCESS)
-		 throw Exception ("Cannot create OpenCL memory from OpenGL texture.", err);
+		 throw Exception ("Cannot create OpenCL memory from OpenGL texture", err);
 	return Memory (mem);
 }
 

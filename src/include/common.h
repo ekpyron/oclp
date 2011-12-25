@@ -20,6 +20,7 @@
 #define CL_USE_DEPRECATED_OPENCL_1_1_APIS
 #include <CL/cl.h>
 #include <CL/cl_gl.h>
+#include <CL/cl_ext.h>
 
 #include <vector>
 #include <string>

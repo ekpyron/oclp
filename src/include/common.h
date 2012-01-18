@@ -1,21 +1,21 @@
 /*  
- * This file is part of clp.
+ * This file is part of oclp.
  *
- * clp is free software: you can redistribute it and/or modify
+ * oclp is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * clp is distributed in the hope that it will be useful,
+ * oclp is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with clp.  If not, see <http://www.gnu.org/licenses/>.
+ * along with oclp.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef CLP_COMMON_H
-#define CLP_COMMON_H
+#ifndef OCLP_COMMON_H
+#define OCLP_COMMON_H
 
 #define CL_USE_DEPRECATED_OPENCL_1_1_APIS
 #include <CL/cl.h>
@@ -27,4 +27,4 @@
 
 #include "exception.h"
 
-#endif /* CLP_COMMON_H */
+#endif /* OCLP_COMMON_H */

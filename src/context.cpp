@@ -153,6 +153,18 @@ Memory Context::CreateFromGLTexture2D (cl_mem_flags flags,
 	return Memory (mem);
 }
 
+Memory Context::CreateFromGLRenderbuffer (cl_mem_flags flags,
+																					const gl::Renderbuffer &renderbuffer)
+{
+	cl_mem mem;
+	cl_int err;
+	mem = clCreateFromGLRenderbuffer (context, flags, renderbuffer.get (), &err);
+	if (err != CL_SUCCESS)
+		 throw Exception ("Cannot create OpenCL memory from OpenGL renderbuffer",
+											err);
+	return Memory (mem);
+}
+
 Program Context::CreateProgramWithSource (const std::string &src)
 {
 	cl_program program;

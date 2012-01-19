@@ -43,6 +43,8 @@ public:
 																 GLint miplevel, const gl::Texture &texture);
 	 Memory CreateFromGLTexture3D (cl_mem_flags flags, GLenum texture_target,
 																 GLint miplevel, const gl::Texture &texture);
+	 Memory CreateFromGLRenderbuffer (cl_mem_flags flags,
+																		const gl::Renderbuffer &renderbuffer);
 	 CommandQueue CreateCommandQueue (cl_command_queue_properties properties);
 	 Program CreateProgramWithSource (const std::string &strings);
 	 void GetDeviceInfo (cl_device_info param_name, size_t param_value_size,

@@ -156,4 +156,19 @@ void CommandQueue::EnqueueCopyBufferToImage (const Memory &src,
 											" an image.", err);
 }
 
+void CommandQueue::EnqueueWriteBuffer (const Memory &buffer,
+																			 cl_bool blocking_write, size_t offset,
+																			 size_t cb, const void *ptr,
+																			 cl_uint num_events_in_wait_list,
+																			 const cl_event *event_wait_list,
+																			 cl_event *event)
+{
+	cl_int err;
+	err = clEnqueueWriteBuffer (queue, buffer.get (), blocking_write,
+															offset, cb, ptr, num_events_in_wait_list,
+															event_wait_list, event);
+	if (err != CL_SUCCESS)
+		 throw Exception ("Cannot enqueue a buffer write operation", err);
+}
+
 } /* namespace cl */

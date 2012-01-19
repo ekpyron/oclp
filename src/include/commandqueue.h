@@ -57,6 +57,10 @@ public:
 																	cl_uint num_events_in_wait_list,
 																	const cl_event *event_wait_list,
 																	cl_event *event);
+	 void EnqueueWriteBuffer (const Memory &buffer, cl_bool blocking_write,
+														size_t offset, size_t cb, const void *ptr,
+														cl_uint num_events_in_wait_list,
+														const cl_event *event_wait_list, cl_event *event);
 private:
 	 CommandQueue (cl_command_queue q);
 	 friend class Context;

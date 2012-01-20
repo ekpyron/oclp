@@ -22,17 +22,20 @@ Memory::Memory (void) : mem (NULL)
 {
 }
 
-Memory::Memory (cl_mem m) : mem (m)
+Memory::Memory (cl_mem m)
 {
+  mem = m;
 }
 
-Memory::Memory (Memory &&m) : mem (m.mem)
+Memory::Memory (Memory &&m)
 {
+	mem = m.mem;
 	m.mem = NULL;
 }
 
-Memory::Memory (const Memory &m) : mem (m.mem)
+Memory::Memory (const Memory &m)
 {
+	mem = m.mem;
 	if (mem)
 	{
 		 clRetainMemObject (mem);
@@ -50,6 +53,10 @@ Memory::~Memory (void)
 
 Memory &Memory::operator= (Memory &&m)
 {
+	if (mem)
+	{
+		clReleaseMemObject (mem);
+	}
 	mem = m.mem;
 	m.mem = NULL;
 	return *this;
@@ -57,10 +64,14 @@ Memory &Memory::operator= (Memory &&m)
 
 Memory &Memory::operator= (const Memory &m)
 {
+	if (mem)
+	{
+		clReleaseMemObject (mem);
+	}
 	mem = m.mem;
 	if (mem != NULL)
 	{
-		clReleaseMemObject (mem);
+		clRetainMemObject (mem);
 	}
 	return *this;
 }

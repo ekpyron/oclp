@@ -165,6 +165,18 @@ Memory Context::CreateFromGLRenderbuffer (cl_mem_flags flags,
 	return Memory (mem);
 }
 
+Memory Context::CreateFromGLRenderbuffer (cl_mem_flags flags,
+																					GLuint renderbuffer)
+{
+	cl_mem mem;
+	cl_int err;
+	mem = clCreateFromGLRenderbuffer (context, flags, renderbuffer, &err);
+	if (err != CL_SUCCESS)
+		 throw Exception ("Cannot create OpenCL memory from OpenGL renderbuffer",
+											err);
+	return Memory (mem);
+}
+
 Program Context::CreateProgramWithSource (const std::string &src)
 {
 	cl_program program;

@@ -41,7 +41,11 @@ Context::Context (void) : context (NULL)
 #if defined (__APPLE__) || defined (MACOSX)
 // TODO
 #elif defined WiN32 || defined _WIN32
-// TODO
+	cl_context_properties props[] = {
+		CL_GL_CONTEXT_KHR, (cl_context_properties) wglGetCurrentContext (),
+		CL_WGL_HDC_KHR, (cl_context_properties) wglGetCurrentDC (),
+		0
+	};
 #else
 	cl_context_properties props[] = {
 		CL_GL_CONTEXT_KHR, (cl_context_properties) glXGetCurrentContext (),

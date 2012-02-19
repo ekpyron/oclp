@@ -6,6 +6,8 @@ AC_PROG_CXX
 AC_LANG([C++])
 AC_LANG_CPLUSPLUS
 
+AC_CONFIG_MACRO_DIR([m4])
+
 AC_ARG_WITH([glm],
 	[AS_HELP_STRING([--with-glm=DIR],
 			[location of the glm headers])],
@@ -35,6 +37,8 @@ AC_CHECK_LIB(OpenCL, clFinish,
 	AC_MSG_FAILURE([could not link with opencl]))
 
 PKG_CHECK_MODULES([DEPS], [oglp])
+
+AX_CHECK_GL
 
 AC_CONFIG_FILES([Makefile src/Makefile oclp.pc])
 AC_OUTPUT

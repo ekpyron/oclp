@@ -7,5 +7,5 @@ Name: oclp
 Description: C++ wrapper for OpenCL
 Requires: oglp
 Version: @PACKAGE_VERSION@
-Libs: -L${libdir} -loclp @CL_LIBS@
+Libs: -L${libdir} -loclp @CL_LIBS@ @GL_LIBS@
 Cflags: -I${includedir} @CL_CFLAGS@

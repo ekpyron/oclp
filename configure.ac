@@ -8,6 +8,15 @@ AC_LANG_CPLUSPLUS
 
 AC_CONFIG_MACRO_DIR([m4])
 
+WIN32="no"
+case "${host}" in
+	*-mingw*)
+		WIN32="yes"
+	;;
+	*)
+	;;
+esac
+
 AC_ARG_WITH([glm],
 	[AS_HELP_STRING([--with-glm=DIR],
 			[location of the glm headers])],
@@ -29,12 +38,18 @@ AC_ARG_WITH([opencl-libdir],
 	[AS_IF([test "x$withval" != xyes],
 		[CL_LDFLAGS="-L$withval"
 		LDFLAGS="${CL_LDFLAGS} $LDFLAGS"])])
-AC_CHECK_LIB(OpenCL, clFinish,
-	[LIBS="-lOpenCL ${LIBS}"
-	 CL_LIBS="${CL_LDFLAGS} -lOpenCL"
-	 AC_SUBST(CL_LIBS)
-	],
-	AC_MSG_FAILURE([could not link with opencl]))
+
+if test "${WIN32}" = "yes"; then
+	LIBS="-lOpenCL ${LIBS}"
+	CL_LIBS="${CL_LDFLAGS} -lOpenCL"
+	AC_SUBST(CL_LIBS)
+else
+	AC_CHECK_LIB(OpenCL, clFinish,
+		[LIBS="-lOpenCL ${LIBS}"
+		 CL_LIBS="${CL_LDFLAGS} -lOpenCL"
+		 AC_SUBST(CL_LIBS)],
+		AC_MSG_FAILURE([could not link with opencl]))
+fi
 
 PKG_CHECK_MODULES([DEPS], [oglp])
 

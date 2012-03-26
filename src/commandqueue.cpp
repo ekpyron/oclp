@@ -171,4 +171,19 @@ void CommandQueue::EnqueueWriteBuffer (const Memory &buffer,
 		 throw Exception ("Cannot enqueue a buffer write operation", err);
 }
 
+void CommandQueue::EnqueueReadBuffer (const Memory &buffer,
+																			cl_bool blocking_read, size_t offset,
+																			size_t cb, void *ptr,
+																			cl_uint num_events_in_wait_list,
+																			const cl_event *event_wait_list,
+																			cl_event *event)
+{
+	cl_int err;
+	err = clEnqueueReadBuffer (queue, buffer.get (), blocking_read,
+															offset, cb, ptr, num_events_in_wait_list,
+															event_wait_list, event);
+	if (err != CL_SUCCESS)
+		 throw Exception ("Cannot enqueue a buffer read operation", err);
+}
+
 } /* namespace cl */

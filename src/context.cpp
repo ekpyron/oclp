@@ -70,6 +70,34 @@ Context::Context (void) : context (NULL)
 	{
 		std::vector<cl_device_id> devices;
 		cl_uint num_devices;
+
+		{
+			std::vector<char> buffer;
+			size_t len;
+			err = clGetPlatformInfo (platform, CL_PLATFORM_NAME, 0, NULL, &len);
+			if (err == CL_SUCCESS)
+			{
+				buffer.resize (len + 1);
+				err = clGetPlatformInfo (platform, CL_PLATFORM_NAME, len, &buffer[0], NULL);
+				if (err == CL_SUCCESS)
+				{
+					buffer[len] = 0;
+					std::cerr << "CL_PLATFORM_NAME: " << &buffer[0] << std::endl;
+				}
+			}
+			err = clGetPlatformInfo (platform, CL_PLATFORM_VENDOR, 0, NULL, &len);
+			if (err == CL_SUCCESS)
+			{
+				buffer.resize (len + 1);
+				err = clGetPlatformInfo (platform, CL_PLATFORM_VENDOR, len, &buffer[0], NULL);
+				if (err == CL_SUCCESS)
+				{
+					buffer[len] = 0;
+					std::cerr << "CL_PLATFORM_VENDOR: " << &buffer[0] << std::endl;
+				}
+			}
+		}
+
 		err = clGetDeviceIDs (platform, CL_DEVICE_TYPE_ALL, 0, NULL, &num_devices);
 		if (err != CL_SUCCESS)
 			 continue;
@@ -81,6 +109,22 @@ Context::Context (void) : context (NULL)
 
 		for (cl_device_id &device : devices)
 		{
+			{
+				std::vector<char> buffer;
+				size_t len;
+				err = clGetDeviceInfo (device, CL_DEVICE_NAME, 0, NULL, &len);
+				if (err == CL_SUCCESS)
+				{
+					buffer.resize (len + 1);
+					err = clGetDeviceInfo (device, CL_DEVICE_NAME, len, &buffer[0], NULL);
+					buffer[len] = 0;
+					if (err == CL_SUCCESS)
+					{
+						std::cerr << "CL_DEVICE_NAME: " << &buffer[0] << std::endl;
+					}
+				}
+			}
+
 			context = clCreateContext (props, 1, &device, pfn_notify,
 																 NULL, &err);
 			if (err == CL_SUCCESS)
@@ -108,6 +152,7 @@ Memory Context::CreateBuffer (cl_mem_flags flags, size_t size, void *ptr)
 {
 	cl_mem mem;
 	cl_int err;
+	std::cerr << "Create OpenCL buffer (" << size << " bytes)." << std::endl;
 	mem = clCreateBuffer (context, flags, size, ptr, &err);
 	if (err != CL_SUCCESS)
 		 throw Exception ("Cannot create OpenCL memory"
@@ -123,6 +168,7 @@ Memory Context::CreateImage2D (cl_mem_flags flags,
 {
 	cl_mem mem;
 	cl_int err;
+	std::cerr << "Create OpenCL image (" << image_width << "x" << image_height << " pixels)." << std::endl;
 	const cl_image_format format = { image_channel_order,
 																	 image_channel_data_type };
 	mem = clCreateImage2D (context, flags, &format, image_width, image_height,
@@ -137,6 +183,7 @@ Memory Context::CreateFromGLBuffer (cl_mem_flags flags,
 {
 	cl_mem mem;
 	cl_int err;
+	std::cerr << "Create OpenCL memory from OpenGL buffer." << std::endl;
 	mem = clCreateFromGLBuffer (context, flags, buffer.get (), &err);
 	if (err != CL_SUCCESS)
 		 throw Exception ("Cannot create OpenCL memory from OpenGL buffer.", err);
@@ -150,6 +197,8 @@ Memory Context::CreateFromGLTexture2D (cl_mem_flags flags,
 {
 	cl_mem mem;
 	cl_int err;
+	std::cerr << "Create OpenCL memory from OpenGL texture ("
+						<< texture.get () << ")." << std::endl;
 	mem = clCreateFromGLTexture2D (context, flags, textarget, miplevel,
 																 texture.get (), &err);
 	if (err != CL_SUCCESS)
@@ -162,6 +211,7 @@ Memory Context::CreateFromGLRenderbuffer (cl_mem_flags flags,
 {
 	cl_mem mem;
 	cl_int err;
+	std::cerr << "Create OpenCL memory from OpenGL renderbuffer." << std::endl;
 	mem = clCreateFromGLRenderbuffer (context, flags, renderbuffer.get (), &err);
 	if (err != CL_SUCCESS)
 		 throw Exception ("Cannot create OpenCL memory from OpenGL renderbuffer",
@@ -174,6 +224,7 @@ Memory Context::CreateFromGLRenderbuffer (cl_mem_flags flags,
 {
 	cl_mem mem;
 	cl_int err;
+	std::cerr << "Create OpenCL memory from OpenGL renderbuffer." << std::endl;
 	mem = clCreateFromGLRenderbuffer (context, flags, renderbuffer, &err);
 	if (err != CL_SUCCESS)
 		 throw Exception ("Cannot create OpenCL memory from OpenGL renderbuffer",
@@ -186,6 +237,7 @@ Program Context::CreateProgramWithSource (const std::string &src)
 	cl_program program;
 	cl_int err;
 	const char *source = src.c_str ();
+	std::cerr << "Create OpenCL Program." << std::endl;
 	program = clCreateProgramWithSource (context, 1, &source, NULL, &err);
 	if (err != CL_SUCCESS)
 		 throw Exception ("Cannot create an OpenCL program with source.", err);

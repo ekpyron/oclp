@@ -51,7 +51,9 @@ public:
 	 Program CreateProgramWithSource (const std::string &strings);
 	 void GetDeviceInfo (cl_device_info param_name, size_t param_value_size,
 											 void *param_value, size_t *param_value_size_ret);
+#ifdef OCLP_ENABLE_CL_KHR_GL_EVENT
 	 cl_event CreateEventFromGLsync (GLsync sync);
+#endif /* OCLP_ENABLE_CL_KHR_GL_EVENT */
 	 cl_event CreateUserEvent (void);
 private:
 	 cl_context context;

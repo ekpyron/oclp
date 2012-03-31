@@ -273,6 +273,7 @@ void Context::GetDeviceInfo (cl_device_info param_name,
 		 throw Exception ("Cannot obtain OpenCL device information", err);
 }
 
+#ifdef OCLP_ENABLE_CL_KHR_GL_EVENT
 cl_event Context::CreateEventFromGLsync (GLsync sync)
 {
 	cl_int err;
@@ -283,6 +284,7 @@ cl_event Context::CreateEventFromGLsync (GLsync sync)
 											"sync object", err);
 	return event;
 }
+#endif /* OCLP_ENABLE_CL_KHR_GL_EVENT */
 
 cl_event Context::CreateUserEvent (void)
 {

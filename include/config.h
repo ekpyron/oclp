@@ -14,20 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with oclp.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef OCLP_COMMON_H
-#define OCLP_COMMON_H
+#ifndef OCLP_CONFIG_H
+#define OCLP_CONFIG_H
 
-#include "config.h"
+/*
+#define OCLP_ENABLE_CL_KHR_GL_EVENT
+*/
 
-#define CL_USE_DEPRECATED_OPENCL_1_1_APIS
-#include <CL/cl.h>
-#include <CL/cl_gl.h>
-#include <CL/cl_ext.h>
-#include <CL/cl_gl_ext.h>
-
-#include <vector>
-#include <string>
-
-#include "exception.h"
-
-#endif /* OCLP_COMMON_H */
+#endif /* OCLP_CONFIG_H */

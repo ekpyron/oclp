@@ -186,4 +186,31 @@ void CommandQueue::EnqueueReadBuffer (const Memory &buffer,
 		 throw Exception ("Cannot enqueue a buffer read operation", err);
 }
 
+cl_event CommandQueue::EnqueueMarker (void)
+{
+	cl_event event;
+	cl_int err;
+	err = clEnqueueMarker (queue, &event);
+	if (err != CL_SUCCESS)
+		 throw Exception ("Cannot enqueue a marker", err);
+	return event;
+}
+
+void CommandQueue::EnqueueWaitForEvents (cl_uint num_events,
+																				 const cl_event *event_list)
+{
+	cl_int err;
+	err = clEnqueueWaitForEvents (queue, num_events, event_list);
+	if (err != CL_SUCCESS)
+		 throw Exception ("Cannot enqueue a wait for events", err);
+}
+
+void CommandQueue::EnqueueBarrier (void)
+{
+	cl_int err;
+	err = clEnqueueBarrier (queue);
+	if (err != CL_SUCCESS)
+		 throw Exception ("Cannot enqueue a barrier operation", err);
+}
+
 } /* namespace cl */

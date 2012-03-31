@@ -16,6 +16,7 @@
  */
 #include "oclp.h"
 #include <iostream>
+#include <sstream>
 
 #if defined (__APPLE__) || defined (MACOSX)
 // TODO
@@ -42,101 +43,85 @@ Context::Context (void) : context (NULL)
 // TODO
 #elif defined WiN32 || defined _WIN32
 	cl_context_properties props[] = {
+		CL_CONTEXT_PLATFORM, 0,
 		CL_GL_CONTEXT_KHR, (cl_context_properties) wglGetCurrentContext (),
 		CL_WGL_HDC_KHR, (cl_context_properties) wglGetCurrentDC (),
-		0
+		0, 0, 0
 	};
 #else
 	cl_context_properties props[] = {
+		CL_CONTEXT_PLATFORM, 0,
 		CL_GL_CONTEXT_KHR, (cl_context_properties) glXGetCurrentContext (),
 		CL_GLX_DISPLAY_KHR, (cl_context_properties) glXGetCurrentDisplay (),
-		0
+		0, 0, 0
 	};
 #endif
+
+	clGetGLContextInfoKHR_fn GetGLContextInfo;
+	GetGLContextInfo = (clGetGLContextInfoKHR_fn)
+		 clGetExtensionFunctionAddress ("clGetGLContextInfoKHR");
 	cl_uint num_platforms;
 	std::vector<cl_platform_id> platforms;
 
+	if (GetGLContextInfo == NULL)
+		throw Exception ("Cannot obtain clGetGLContextInfoKHR entry point",
+										 CL_INVALID_PLATFORM);
+
 	err = clGetPlatformIDs (0, NULL, &num_platforms);
 	if (err != CL_SUCCESS)
-		 throw Exception ("Cannot obtain the number of OpenCL platform IDs.", err);
+		 throw Exception ("Cannot obtain the number of OpenCL "
+												"platform IDs", err);
 
 	platforms.resize (num_platforms);
 
 	err = clGetPlatformIDs (platforms.size (), &platforms[0], &num_platforms);
 	if (err != CL_SUCCESS)
-		 throw Exception ("Cannot obtain the available OpenCL platform IDs.", err);
+		 throw Exception ("Cannot obtain the available OpenCL "
+											"platform IDs", err);
 
 	for (cl_platform_id &platform : platforms)
 	{
-		std::vector<cl_device_id> devices;
-		cl_uint num_devices;
 
-		{
-			std::vector<char> buffer;
-			size_t len;
-			err = clGetPlatformInfo (platform, CL_PLATFORM_NAME, 0, NULL, &len);
-			if (err == CL_SUCCESS)
-			{
-				buffer.resize (len + 1);
-				err = clGetPlatformInfo (platform, CL_PLATFORM_NAME, len, &buffer[0], NULL);
-				if (err == CL_SUCCESS)
-				{
-					buffer[len] = 0;
-					std::cerr << "CL_PLATFORM_NAME: " << &buffer[0] << std::endl;
-				}
-			}
-			err = clGetPlatformInfo (platform, CL_PLATFORM_VENDOR, 0, NULL, &len);
-			if (err == CL_SUCCESS)
-			{
-				buffer.resize (len + 1);
-				err = clGetPlatformInfo (platform, CL_PLATFORM_VENDOR, len, &buffer[0], NULL);
-				if (err == CL_SUCCESS)
-				{
-					buffer[len] = 0;
-					std::cerr << "CL_PLATFORM_VENDOR: " << &buffer[0] << std::endl;
-				}
-			}
-		}
-
-		err = clGetDeviceIDs (platform, CL_DEVICE_TYPE_ALL, 0, NULL, &num_devices);
+		std::vector<char> extensions;
+		size_t len;
+		err = clGetPlatformInfo (platform, CL_PLATFORM_EXTENSIONS,
+											 0, NULL, &len);
 		if (err != CL_SUCCESS)
-			 continue;
-		devices.resize (num_devices);
-		err = clGetDeviceIDs (platform, CL_DEVICE_TYPE_ALL, devices.size (),
-													&devices[0], &num_devices);
+			 throw Exception ("Cannot obtain the length of the OpenCL platform "
+												"extensions string", err);
+		extensions.resize (len + 1);
+		err = clGetPlatformInfo (platform, CL_PLATFORM_EXTENSIONS,
+														 len, &extensions[0], NULL);
 		if (err != CL_SUCCESS)
-			 continue;
+			 throw Exception ("Cannot obtain the OpenCL platform "
+												"extension string", err);
+		extensions[len] = 0;
 
-		for (cl_device_id &device : devices)
+		std::istringstream stream (&extensions[0]);
+		std::string extension;
+		bool gl_sharing = false;
+		while (std::getline (stream, extension, ' ').good ())
 		{
+			if (extension == "cl_khr_gl_sharing")
 			{
-				std::vector<char> buffer;
-				size_t len;
-				err = clGetDeviceInfo (device, CL_DEVICE_NAME, 0, NULL, &len);
-				if (err == CL_SUCCESS)
-				{
-					buffer.resize (len + 1);
-					err = clGetDeviceInfo (device, CL_DEVICE_NAME, len, &buffer[0], NULL);
-					buffer[len] = 0;
-					if (err == CL_SUCCESS)
-					{
-						std::cerr << "CL_DEVICE_NAME: " << &buffer[0] << std::endl;
-					}
-				}
-			}
-
-			context = clCreateContext (props, 1, &device, pfn_notify,
-																 NULL, &err);
-			if (err == CL_SUCCESS)
-			{
-				deviceid = device;
+				gl_sharing = true;
 				break;
 			}
 		}
-	}
+		if (!gl_sharing)
+			 continue;
 
-	if (context == NULL)
-		 throw Exception ("Cannot create a suitable OpenCL context.", err);
+		props[1] = (cl_context_properties) platform;
+		err = GetGLContextInfo (props, CL_CURRENT_DEVICE_FOR_GL_CONTEXT_KHR,
+														sizeof (cl_device_id), &deviceid, NULL);
+		if (err != CL_SUCCESS)
+			 continue;
+
+		context = clCreateContext (props, 1, &deviceid, pfn_notify,
+															 NULL, &err);
+		if (err != CL_SUCCESS)
+			 continue;
+	}
 }
 
 Context::~Context (void)

@@ -21,6 +21,7 @@
 #include <CL/cl.h>
 #include <CL/cl_gl.h>
 #include <CL/cl_ext.h>
+#include <CL/cl_gl_ext.h>
 
 #include <vector>
 #include <string>

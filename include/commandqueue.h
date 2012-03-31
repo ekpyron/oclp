@@ -66,6 +66,8 @@ public:
 													 cl_uint num_events_in_wait_list,
 													 const cl_event *event_wait_list, cl_event *event);
 	 cl_event EnqueueMarker (void);
+	 void EnqueueBarrier (void);
+	 void EnqueueWaitForEvents (cl_uint num_events, const cl_event *event_list);
 private:
 	 CommandQueue (cl_command_queue q);
 	 friend class Context;

@@ -279,6 +279,7 @@ bool Context::IsExtensionSupported (const std::string &extension)
 		if ((where == start || *(where - 1) == ' ')
 				&& (*end == ' ' || *end == '\0'))
 			 return true;
+		start = terminator;
 	}
 }
 

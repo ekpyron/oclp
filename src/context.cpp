@@ -17,6 +17,7 @@
 #include "oclp.h"
 #include <iostream>
 #include <sstream>
+#include <cstring>
 
 #if defined (__APPLE__) || defined (MACOSX)
 // TODO
@@ -256,6 +257,29 @@ void Context::GetDeviceInfo (cl_device_info param_name,
 												 param_value, param_value_size_ret);
 	if (err != CL_SUCCESS)
 		 throw Exception ("Cannot obtain OpenCL device information", err);
+}
+
+bool Context::IsExtensionSupported (const std::string &extension)
+{
+	size_t len;
+	std::vector<char> str;
+	GetDeviceInfo (CL_DEVICE_EXTENSIONS, 0, NULL, &len);
+	str.resize (len);
+	GetDeviceInfo (CL_DEVICE_EXTENSIONS, len, &str[0], NULL);
+
+	const char *start = &str[0];
+	while (true)
+	{
+		const char *where;
+		const char *end;
+		where = strstr (start, extension.c_str ());
+		if (!where)
+			 return false;
+		end = where + extension.length ();
+		if ((where == start || *(where - 1) == ' ')
+				&& (*end == ' ' || *end == '\0'))
+			 return true;
+	}
 }
 
 #ifdef OCLP_ENABLE_CL_KHR_GL_EVENT

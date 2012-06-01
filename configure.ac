@@ -2,6 +2,7 @@ AC_INIT([oclp], [0.0], [daniel@ekpyron.org])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 LT_INIT
 CXXFLAGS="$CXXFLAGS -std=c++0x"
+AM_PROG_AR
 AC_PROG_CXX
 AC_LANG([C++])
 AC_LANG_CPLUSPLUS
